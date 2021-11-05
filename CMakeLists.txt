@@ -611,24 +611,18 @@ else()
     endif()
 endif()
 
-string(COMPARE EQUAL "${CMAKE_HOST_SYSTEM_PROCESSOR}" "i686"  _x86)
-string(COMPARE EQUAL "${CMAKE_HOST_SYSTEM_PROCESSOR}" "x86_64"  _x86_64)
-string(COMPARE EQUAL "${CMAKE_HOST_SYSTEM_PROCESSOR}" "aarch64"  _aarch64)
+string(COMPARE EQUAL "${CMAKE_SYSTEM_PROCESSOR}" "i686"  _x86)
+string(COMPARE EQUAL "${CMAKE_SYSTEM_PROCESSOR}" "x86_64"  _x86_64)
+string(COMPARE EQUAL "${CMAKE_SYSTEM_PROCESSOR}" "aarch64"  _aarch64)
 
 if(_x86_64 OR _aarch64)
   add_definitions(-DCONFIG_64BIT)
 endif()
 
-if(NOT _x86 AND NOT _x86_64)
-  install(TARGETS ${BOX64}
-    RUNTIME DESTINATION bin)
-  configure_file(system/box64.conf.cmake system/box64.conf)
-  install(FILES ${CMAKE_BINARY_DIR}/system/box64.conf DESTINATION /etc/binfmt.d/)
-  install(FILES ${CMAKE_SOURCE_DIR}/x64lib/libstdc++.so.5 DESTINATION /usr/lib/x86_64-linux-gnu/)
-  install(FILES ${CMAKE_SOURCE_DIR}/x64lib/libstdc++.so.6 DESTINATION /usr/lib/x86_64-linux-gnu/)
-  install(FILES ${CMAKE_SOURCE_DIR}/x64lib/libgcc_s.so.1 DESTINATION /usr/lib/x86_64-linux-gnu/)
-  install(FILES ${CMAKE_SOURCE_DIR}/x64lib/libpng12.so.0 DESTINATION /usr/lib/x86_64-linux-gnu/)
-endif()
+install(TARGETS ${BOX64}
+  RUNTIME DESTINATION bin)
+configure_file(system/box64.conf.cmake system/box64.conf)
+install(FILES ${CMAKE_BINARY_DIR}/system/box64.conf DESTINATION /etc/binfmt.d/)
 
 if(NOT TARGET uninstall)
     configure_file(
